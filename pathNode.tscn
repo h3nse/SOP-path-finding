@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://bhnpak8kqivm7"]
+
+[ext_resource type="Script" path="res://pathNode.gd" id="1_1bl5a"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_gad1k"]
+
+[node name="pathNode" type="Sprite2D"]
+position = Vector2(10, 10)
+scale = Vector2(30, 30)
+texture = SubResource("CanvasTexture_gad1k")
+script = ExtResource("1_1bl5a")
