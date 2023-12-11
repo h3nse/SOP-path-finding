@@ -1,11 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://bhnpak8kqivm7"]
+[gd_scene load_steps=3 format=3 uid="uid://vcmyxl4wfg6e"]
 
-[ext_resource type="Script" path="res://pathNode.gd" id="1_1bl5a"]
+[ext_resource type="Script" path="res://pathNode.gd" id="1_rreka"]
 
-[sub_resource type="CanvasTexture" id="CanvasTexture_gad1k"]
+[sub_resource type="CanvasTexture" id="CanvasTexture_re4xf"]
 
 [node name="pathNode" type="Sprite2D"]
-position = Vector2(10, 10)
 scale = Vector2(30, 30)
-texture = SubResource("CanvasTexture_gad1k")
-script = ExtResource("1_1bl5a")
+texture = SubResource("CanvasTexture_re4xf")
+script = ExtResource("1_rreka")

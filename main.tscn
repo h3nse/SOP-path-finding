@@ -1,8 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://b07u0qjjjcqye"]
+[gd_scene load_steps=2 format=3 uid="uid://bab00gjf046vf"]
 
-[ext_resource type="Script" path="res://main.gd" id="1_p08hw"]
+[ext_resource type="Script" path="res://main.gd" id="1_r5v3v"]
 
 [node name="Main" type="Node2D"]
-script = ExtResource("1_p08hw")
-GOAL = Vector2(9, 9)
-OBSTACLE_RATION = 25
+script = ExtResource("1_r5v3v")
+
+[node name="Astar_Tick" type="Timer" parent="."]
+one_shot = true
+
+[node name="Astar_Rerun" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="Astar_Tick" to="." method="_on_astar_tick_timeout"]
+[connection signal="timeout" from="Astar_Rerun" to="." method="_on_astar_rerun_timeout"]

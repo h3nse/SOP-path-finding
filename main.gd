@@ -1,102 +1,139 @@
 extends Node2D
 
+enum Algorithm {Astar, Placeholder}
+@export var algorithm: Algorithm
+@export var tickSpeed = 0.02
+
+@export var rerunDelay = 2
+
 @export_group("Grid")
-@export_range(0,50,1,"or_greater") var ROWS = 10
-@export_range(0,50,1,"or_greater") var COLS = 10
-@export var SOURCE = Vector2()
-@export var GOAL = Vector2()
-@export_range(0,100) var OBSTACLE_RATION = 30
-@export_group("")
+@export var grid_dimensions = Vector2(25,25)
+@export var source = Vector2(0,0)
+@export var destination = Vector2(25,25)
+@export_range(0,100) var obstacle_ratio = 30
 
 var _node = preload("res://pathNode.tscn")
 
 var grid = []
-var isValid = true
+var srcNode
+var destNode
+var openList = []
+var foundDest
+var currentNode
+
+func _ready():
+	destination = destination - Vector2(1,1)
+
+	create_grid()
+	srcNode = grid[source.x][source.y]
+	destNode = grid[destination.x][destination.y]
+	srcNode.isSrc = true
+	destNode.isDest = true
+
+	match algorithm:
+		Algorithm.Astar:
+			astar()
+		Algorithm.Placeholder:
+			placeholder()
 
 func create_grid():
-	for x in ROWS:
+	for i in range(grid_dimensions.x):
 		grid.append([])
-		for y in COLS:
+		for j in range(grid_dimensions.y):
 			var node = _node.instantiate()
-			node.init(x,y)
-			grid[x].append(node)
+			node.init(i,j)
+			grid[i].append(node)
 			add_child(node)
 
-func checkIsValid():
-	return (SOURCE.x >= 0 and SOURCE.x < ROWS and SOURCE.y >= 0 and SOURCE.y < COLS
-	and GOAL.x >= 0 and GOAL.x < ROWS and GOAL.y >= 0 and GOAL.y < COLS)
+func add_obstacles():
+	for i in grid:
+		for j in i:
+			j.reset()
+			if randi_range(0, 100) < obstacle_ratio:
+				j.isObstacle = true
 
-func addObstacles():
-	for x in range(grid.size()):
-		for y in range(grid[x].size()):
-			if randi_range(0,100) < OBSTACLE_RATION:
-				grid[x][y].isObstacle = true
-			else:
-				grid[x][y].isObstacle = false
+func astar():
+	add_obstacles()
+	srcNode.g = 0
+	srcNode.h = 0
+	srcNode.f = 0
+	openList = []
+	openList.append(srcNode)
+	currentNode = _node.instantiate() # Placeholder
+	foundDest = false
+	$Astar_Tick.start(tickSpeed)
 
-func get_lowest_f(nodeList):
-	var lowest_node = nodeList[0]
-	for node in nodeList:
-		lowest_node = node if node.f < lowest_node.f else lowest_node
+func _on_astar_rerun_timeout():
+	astar()
 
-	return lowest_node
+func astar_tick():
+	currentNode = get_lowest_f()
+	openList.remove_at(openList.find(currentNode))
+	currentNode.isCurrent = true
 
-func is_goal(node, goal):
-	return node.x == goal.x and node.y == goal.y
+	var neighbours = get_neighbours()
+	for neighbour in neighbours:
+		if neighbour.isClosed or neighbour.isObstacle:
+			continue
 
-func get_neighbours(grid, node):
+		if neighbour.x == destNode.x and neighbour.y == destNode.y:
+			neighbour.parent = currentNode
+			foundDest = true
+
+		var g = currentNode.g + 1
+		var h = calculateH(neighbour)
+		var f = g + h
+
+		if not openList.has(neighbour):
+			neighbour.g = g
+			neighbour.h = h
+			neighbour.f = f
+			neighbour.parent = currentNode
+			openList.append(neighbour)
+		elif g < neighbour.g:
+			neighbour.g = g
+			neighbour.f = f
+			neighbour.parent = currentNode
+
+	$Astar_Tick.start(tickSpeed)
+
+func _on_astar_tick_timeout():
+	currentNode.isClosed = true
+	if foundDest:
+		found_destination()
+	elif openList.size() > 0:
+		astar_tick()
+	else:
+		print("Failed to find the destination")
+		$Astar_Rerun.start(rerunDelay)
+
+func get_lowest_f():
+	var lowestIndex = 0
+	for i in range(1, openList.size()):
+		if openList[i].f < openList[lowestIndex].f:
+			lowestIndex = i
+	return openList[lowestIndex]
+
+func get_neighbours():
 	var neighbours = []
 	var localOffsets = [[1,0], [-1,0], [0,1], [0,-1]]
 	for i in range(4):
-		var coords = [node.x + localOffsets[i][0],node.y + localOffsets[i][1]]
-		if  0 <= coords[0] and coords[0] <= grid[0].size()-1 and 0 <= coords[1] and coords[1] <= grid.size()-1:
+		var coords = [currentNode.x + localOffsets[i][0],currentNode.y + localOffsets[i][1]]
+		if  0 <= coords[0] and coords[0] <= grid_dimensions.x - 1 and 0 <= coords[1] and coords[1] <= grid_dimensions.y - 1:
 			neighbours.append(grid[coords[0]][coords[1]])
 	return neighbours
 
-func tracePath():
+func calculateH(node):
+	return abs(node.x - destNode.x) + abs(node.y - destNode.y)
+
+func found_destination():
+	trace_path(currentNode)
+	$Astar_Rerun.start(rerunDelay)
+
+func trace_path(node):
+	while not node.parent == null:
+		node.modulate = Color.BLUE
+		node = node.parent
+
+func placeholder():
 	pass
-
-func astar(grid, src, goal):
-	var openList = []
-	src.f = 0
-	src.g = 0
-	src.h = 0
-	src.parent = src
-	openList.append(src)
-
-	var foundGoal = false
-
-	while openList.size() > 0:
-		var node = get_lowest_f(openList)
-		openList.remove_at(openList.find(node))
-		node.isClosed = true
-
-		var neighbours = get_neighbours(grid, node)
-
-		for neighbour in neighbours:
-			if neighbour.isClosed:
-				continue
-
-			if is_goal(neighbour, goal):
-				neighbour.parent = node
-				tracePath()
-				return
-
-
-func _ready():
-	if not checkIsValid():
-		isValid = false
-		print("The source or the goal is out of range.")
-	if SOURCE == GOAL:
-		isValid = false
-		print("The source and the goal are in the same location.")
-	if isValid:
-		create_grid()
-		addObstacles()
-		var src_node = grid[SOURCE.x][SOURCE.y]
-		var goal_node = grid[GOAL.x][GOAL.y]
-		src_node.modulate = Color(0,1,0)
-		src_node.isObstacle = false
-		goal_node.modulate = Color(1,0,0)
-		goal_node.isObstacle = false
-		astar(grid, src_node, goal_node)
