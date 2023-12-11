@@ -1,8 +1,15 @@
 extends Sprite2D
 
-var x
-var y
 const gridSpace = 5
+
+var x: int
+var y: int
+var f: int
+var g: int
+var h: int
+var parent: Object
+var isClosed = false
+
 var isObstacle: bool = false:
 	set(new_value):
 		isObstacle = new_value
