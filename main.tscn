@@ -4,6 +4,8 @@
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_r5v3v")
+allowDiagonals = true
+obstacle_ratio = 40
 
 [node name="Astar_Tick" type="Timer" parent="."]
 one_shot = true

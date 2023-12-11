@@ -3,8 +3,8 @@ extends Node2D
 enum Algorithm {Astar, Placeholder}
 @export var algorithm: Algorithm
 @export var tickSpeed = 0.02
-
 @export var rerunDelay = 2
+@export var allowDiagonals = false
 
 @export_group("Grid")
 @export var grid_dimensions = Vector2(25,25)
@@ -117,7 +117,9 @@ func get_lowest_f():
 func get_neighbours():
 	var neighbours = []
 	var localOffsets = [[1,0], [-1,0], [0,1], [0,-1]]
-	for i in range(4):
+	if allowDiagonals:
+		localOffsets = [[1,0], [-1,0], [0,1], [0,-1], [1,1], [-1,1], [-1,-1], [1,-1]]
+	for i in range(localOffsets.size()):
 		var coords = [currentNode.x + localOffsets[i][0],currentNode.y + localOffsets[i][1]]
 		if  0 <= coords[0] and coords[0] <= grid_dimensions.x - 1 and 0 <= coords[1] and coords[1] <= grid_dimensions.y - 1:
 			neighbours.append(grid[coords[0]][coords[1]])
