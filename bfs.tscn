@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://byiv7o51qwh7y"]
+
+[ext_resource type="Script" path="res://Bfs.gd" id="1_6hwcd"]
+
+[node name="Bfs" type="Node2D"]
+script = ExtResource("1_6hwcd")
+
+[node name="Tick" type="Timer" parent="."]
+one_shot = true
+
+[node name="Rerun" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="Tick" to="." method="_on_tick_timeout"]
+[connection signal="timeout" from="Rerun" to="." method="_on_rerun_timeout"]

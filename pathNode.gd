@@ -1,4 +1,6 @@
-extends Sprite2D
+class_name PathNode extends Sprite2D
+
+const gridSpace = 5
 
 var isSrc = false:
 	set(new_value):
@@ -31,10 +33,6 @@ var isClosed = false:
 var parent: Object
 var x: int
 var y: int
-var f: int
-var g: int
-var h: int
-const gridSpace = 5
 
 func init(_x, _y):
 	x = _x
@@ -42,8 +40,8 @@ func init(_x, _y):
 	position = Vector2(x, y) * (scale.x + gridSpace) + Vector2(scale.x, scale.y) / 2
 
 func reset():
+	isClosed = false
 	if not(isSrc or isDest):
 		isObstacle = false
 		isCurrent = false
-		isClosed = false
 		modulate = Color.WHITE
