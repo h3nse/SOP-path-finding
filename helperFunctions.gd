@@ -16,12 +16,10 @@ func populate_grid(grid, obstacle_ratio):
 			if randi_range(0, 100) < obstacle_ratio:
 				j.isObstacle = true
 
-func get_neighbours(grid, grid_dimensions, currentNode, allowDiagonals):
+func get_neighbours(grid, grid_dimensions, currentNode):
 	var neighbours = []
 	var localOffsets = [[1,0], [-1,0], [0,1], [0,-1]]
-	if allowDiagonals:
-		localOffsets = [[1,0], [-1,0], [0,1], [0,-1], [1,1], [-1,1], [-1,-1], [1,-1]]
-	for i in range(localOffsets.size()):
+	for i in range(4):
 		var coords = [currentNode.x + localOffsets[i][0],currentNode.y + localOffsets[i][1]]
 		if  0 <= coords[0] and coords[0] <= grid_dimensions.x - 1 and 0 <= coords[1] and coords[1] <= grid_dimensions.y - 1:
 			neighbours.append(grid[coords[0]][coords[1]])

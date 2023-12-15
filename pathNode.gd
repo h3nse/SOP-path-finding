@@ -37,7 +37,7 @@ var y: int
 func init(_x, _y):
 	x = _x
 	y = _y
-	position = Vector2(x, y) * (scale.x + gridSpace) + Vector2(scale.x, scale.y) / 2
+	position = Vector2(x, y) * (scale.x + gridSpace) + Vector2(scale.x, scale.y) / 2 + Vector2(gridSpace, gridSpace)
 
 func reset():
 	isClosed = false

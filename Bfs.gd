@@ -2,7 +2,6 @@ extends PathFinding
 
 @export var tickSpeed = 0.02
 @export var rerunDelay = 2
-@export var allowDiagonals = false
 
 @export_group("Grid")
 @export var grid_dimensions = Vector2(25,25)
@@ -52,7 +51,7 @@ func tick():
 	currentNode = queue.pop_front()
 	currentNode.isCurrent = true
 
-	for neighbour in get_neighbours(grid, grid_dimensions, currentNode, allowDiagonals):
+	for neighbour in get_neighbours(grid, grid_dimensions, currentNode):
 		if neighbour.isClosed or neighbour.isObstacle:
 			continue
 
