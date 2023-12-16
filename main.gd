@@ -10,29 +10,35 @@ extends PathFinding
 
 const NODESPACE = 35
 
-const _grid = preload("res://Grid.tscn")
-const _aStar = preload("res://Astar.tscn")
-const _bfs = preload("res://bfs.tscn")
+@onready var aStar = $Astar
+@onready var bfs = $Bfs
+@onready var algorithms = [aStar, bfs]
 
 func _ready():
-	var aStar = _aStar.instantiate()
-	var bfs = _bfs.instantiate()
-	aStar.add_to_group("Algorithms")
-	bfs.add_to_group("Algorithms")
-	add_child(aStar)
-	add_child(bfs)
+	for a in algorithms:
+		a.grid.init(grid_dimensions)
+		a.init(source, destination)
 
-	var grid = _grid.instantiate()
-	grid.init(grid_dimensions)
-	aStar.init(grid , source, destination)
-	grid = _grid.instantiate()
-	grid.init(grid_dimensions)
-	bfs.init(grid, source, destination)
 	$Rerun.start(rerunDelay)
 
 func _on_rerun_timeout():
 	var newGrid = get_new_grid(grid_dimensions, obstacle_ratio)
-	for child in get_children():
-		if child.is_in_group("Algorithms"):
-			child.grid.set_obstacles(newGrid)
 
+	for a in algorithms:
+		a.grid.set_obstacles(newGrid)
+		a.reset()
+	$Tick.start(tickSpeed)
+
+func _on_tick_timeout():
+	for a in algorithms:
+		a.on_tick()
+	if algorithms.size() > 0:
+		$Tick.start(tickSpeed)
+	else:
+		$Rerun.start(rerunDelay)
+
+func _on_astar_done():
+	algorithms.pop_front()
+
+func _on_bfs_done():
+	algorithms.pop_back()

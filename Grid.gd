@@ -8,7 +8,7 @@ func init(grid_dimensions):
 		grid.append([])
 		for j in range(grid_dimensions.y):
 			var node = _node.instantiate()
-			node.init(j,i)
+			node.init(i,j)
 			grid[i].append(node)
 			add_child(node)
 
