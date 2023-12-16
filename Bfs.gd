@@ -1,6 +1,7 @@
 extends PathFinding
 
 @onready var grid = $Grid
+@onready var time = $TimeLabel
 var source
 var destination
 var srcNode
@@ -12,7 +13,8 @@ var foundDest
 signal done
 
 func init(_source, _destination):
-	grid.position = Vector2(grid.grid.size() * 35 + 20, 0)
+	grid.position = Vector2(grid.grid.size() * 35 + 20, 20)
+	time.position = Vector2(2 * grid.grid.size() * 35 - 20, 0)
 	source = _source
 	destination = _destination - Vector2(1,1)
 	srcNode = grid.grid[source.x][source.y]
@@ -36,7 +38,7 @@ func on_tick():
 		return
 	else:
 		print("Failed to find the destination")
-	done.emit()
+	emit_signal("done")
 
 func tick():
 	currentNode = queue.pop_front()

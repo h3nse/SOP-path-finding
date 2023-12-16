@@ -18,9 +18,21 @@ one_shot = true
 
 [node name="Grid" parent="Astar" instance=ExtResource("3_7yp6j")]
 
+[node name="TimeLabel" type="Label" parent="Astar"]
+offset_right = 40.0
+offset_bottom = 23.0
+
 [node name="Bfs" parent="." instance=ExtResource("4_lw3hj")]
 
 [node name="Grid" parent="Bfs" instance=ExtResource("3_7yp6j")]
+
+[node name="TimeLabel" type="Label" parent="Bfs"]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="TimeLabel" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
 
 [connection signal="timeout" from="Tick" to="." method="_on_tick_timeout"]
 [connection signal="timeout" from="Rerun" to="." method="_on_rerun_timeout"]
