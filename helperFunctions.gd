@@ -1,20 +1,15 @@
 class_name PathFinding extends Node2D
 
-func create_grid(grid, grid_dimensions, _node):
-	for i in range(grid_dimensions.x):
+func get_new_grid(grid_dimensions, obstacle_ratio):
+	var grid = []
+	for i in grid_dimensions.x:
 		grid.append([])
-		for j in range(grid_dimensions.y):
-			var node = _node.instantiate()
-			node.init(i,j)
-			grid[i].append(node)
-			add_child(node)
-
-func populate_grid(grid, obstacle_ratio):
-	for i in grid:
-		for j in i:
-			j.reset()
+		for j in grid_dimensions.y:
 			if randi_range(0, 100) < obstacle_ratio:
-				j.isObstacle = true
+				grid[i].append(1)
+			else:
+				grid[i].append(0)
+	return grid
 
 func get_neighbours(grid, grid_dimensions, currentNode):
 	var neighbours = []

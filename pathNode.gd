@@ -1,4 +1,4 @@
-class_name PathNode extends Sprite2D
+extends Sprite2D
 
 const gridSpace = 5
 
@@ -33,6 +33,9 @@ var isClosed = false:
 var parent: Object
 var x: int
 var y: int
+var g: int
+var h: int
+var f: int
 
 func init(_x, _y):
 	x = _x
