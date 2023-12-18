@@ -41,7 +41,7 @@ func on_tick():
 		return
 	else:
 		print("Failed to find the destination")
-	emit_signal("done", foundDest)
+	emit_signal("done")
 
 func astar_tick():
 	currentNode = get_lowest_f()
