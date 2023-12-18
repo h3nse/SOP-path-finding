@@ -4,7 +4,7 @@
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_re4xf"]
 
-[node name="pathNode" type="Sprite2D"]
+[node name="Sprite2D" type="Sprite2D"]
 scale = Vector2(30, 30)
 texture = SubResource("CanvasTexture_re4xf")
 script = ExtResource("1_ucx8y")

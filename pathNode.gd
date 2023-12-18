@@ -24,6 +24,8 @@ var isCurrent = false:
 			isCurrent = new_value
 			if isCurrent:
 				modulate = Color.BLUE_VIOLET
+			elif isClosed:
+				modulate = Color.ORANGE
 var isClosed = false:
 	set(new_value):
 		isClosed = new_value
@@ -40,7 +42,8 @@ var f: int
 func init(_x, _y):
 	x = _x
 	y = _y
-	position = Vector2(x, y) * (scale.x + gridSpace) + Vector2(scale.x, scale.y) / 2 + Vector2(gridSpace, gridSpace)
+	position = (Vector2(y, x) * (scale.x + gridSpace)
+	+ Vector2(scale.x, scale.y) / 2 + Vector2(gridSpace, gridSpace))
 
 func reset():
 	isClosed = false

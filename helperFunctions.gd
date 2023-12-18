@@ -13,7 +13,7 @@ func get_new_grid(grid_dimensions, obstacle_ratio):
 
 func get_neighbours(grid, currentNode):
 	var neighbours = []
-	var localOffsets = [[1,0], [-1,0], [0,1], [0,-1]]
+	const localOffsets = [[1,0], [-1,0], [0,1], [0,-1]]
 	for i in range(4):
 		var coords = [currentNode.x + localOffsets[i][0],currentNode.y + localOffsets[i][1]]
 		if  0 <= coords[0] and coords[0] <= grid.grid.size() - 1 and 0 <= coords[1] and coords[1] <= grid.grid[0].size() - 1:

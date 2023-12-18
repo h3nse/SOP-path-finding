@@ -7,6 +7,10 @@
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_r5v3v")
+tickSpeed = 0.01
+rerunDelay = 1
+grid_dimensions = Vector2(2, 2)
+destination = Vector2(1, 1)
 
 [node name="Tick" type="Timer" parent="."]
 one_shot = true

@@ -4,6 +4,7 @@ var grid = []
 var _node = preload("res://PathNode.tscn")
 
 func init(grid_dimensions):
+	grid = []
 	for i in range(grid_dimensions.x):
 		grid.append([])
 		for j in range(grid_dimensions.y):

@@ -2,33 +2,34 @@ extends PathFinding
 
 @onready var grid = $Grid
 @onready var time = $TimeLabel
-var source
-var destination
+
+var openList = []
 var srcNode
 var destNode
-var openList = []
 var currentNode
 var foundDest
 
 signal done
 
-func init(_source, _destination):
+func init(grid_dimensions, source, destination):
+	grid.init(grid_dimensions)
 	grid.position = Vector2(0, 20)
 	time.position = Vector2(grid.grid.size() * 35 - 30,0)
-	source = _source
-	destination = _destination - Vector2(1,1)
+
 	srcNode = grid.grid[source.x][source.y]
 	destNode = grid.grid[destination.x][destination.y]
 	srcNode.isSrc = true
 	destNode.isDest = true
 
-func reset():
+func reset(newGrid):
+	grid.set_obstacles(newGrid)
+	time.text = ""
+	openList = []
 	srcNode.g = 0
 	srcNode.h = 0
 	srcNode.f = 0
-	openList = []
 	openList.append(srcNode)
-	currentNode = grid._node.instantiate() # Placeholder
+	currentNode = srcNode
 	foundDest = false
 
 func on_tick():
@@ -40,7 +41,7 @@ func on_tick():
 		return
 	else:
 		print("Failed to find the destination")
-	emit_signal("done")
+	emit_signal("done", foundDest)
 
 func astar_tick():
 	currentNode = get_lowest_f()
@@ -51,8 +52,7 @@ func astar_tick():
 		if neighbour.isClosed or neighbour.isObstacle:
 			continue
 
-		if neighbour.x == destNode.x and neighbour.y == destNode.y:
-			neighbour.parent = currentNode
+		if neighbour.isDest:
 			foundDest = true
 
 		var g = currentNode.g + 1
@@ -76,6 +76,6 @@ func get_lowest_f():
 		if openList[i].f < openList[lowestIndex].f:
 			lowestIndex = i
 	return openList[lowestIndex]
-#
+
 func calculateH(node):
 	return abs(node.x - destNode.x) + abs(node.y - destNode.y)
